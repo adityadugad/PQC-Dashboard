@@ -16,42 +16,31 @@ href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
 <h1>Crypto Insights</h1>
 
-<!-- GRAPH CAROUSEL -->
 <div class="swiper mySwiper">
 <div class="swiper-wrapper">
 
-<div class="swiper-slide"><canvas id="keygen"></canvas></div>
-<div class="swiper-slide"><canvas id="encrypt"></canvas></div>
-<div class="swiper-slide"><canvas id="decrypt"></canvas></div>
-<div class="swiper-slide"><canvas id="total"></canvas></div>
+<div class="swiper-slide"><div class="card"><h3>Key Generation Time</h3><canvas id="keygen"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Encryption Time</h3><canvas id="encrypt"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Decryption Time</h3><canvas id="decrypt"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Total Operation Time</h3><canvas id="total"></canvas></div></div>
 
-<div class="swiper-slide"><canvas id="pubkey"></canvas></div>
-<div class="swiper-slide"><canvas id="cipher"></canvas></div>
-<div class="swiper-slide"><canvas id="quantum"></canvas></div>
-<div class="swiper-slide"><canvas id="throughput"></canvas></div>
+<div class="swiper-slide"><div class="card"><h3>Public Key Size</h3><canvas id="pubkey"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Ciphertext Size</h3><canvas id="cipher"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Quantum Security Score</h3><canvas id="quantum"></canvas></div></div>
+<div class="swiper-slide"><div class="card"><h3>Throughput</h3><canvas id="throughput"></canvas></div></div>
 
 </div>
 </div>
 
-<!-- MAXIMIZE GRAPH MODAL -->
 <div id="modal" class="modal">
 <div class="modal-content">
-
 <span class="close" onclick="closeModal()">✖</span>
 
+<h2 id="modalTitle"></h2>
+
 <div class="modal-grid">
-
 <canvas id="modalChart"></canvas>
-
-<table id="dataTable">
-<tr>
-<th>Time</th>
-<th>Kyber</th>
-<th>RSA</th>
-<th>ECDH</th>
-</tr>
-</table>
-
+<table id="dataTable"></table>
 </div>
 </div>
 </div>

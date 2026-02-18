@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>PQC Dashboard</title>
+<title>PQC Supremacy Dashboard</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -9,6 +9,7 @@
 
 <h1>PQC Supremacy Dashboard</h1>
 
+<div class="table-container">
 <table>
 <tr>
 <th>Metric</th>
@@ -23,13 +24,14 @@
 <tr><td>Total Time</td><td>{{data.pqc.total_ms}}</td><td>{{data.rsa.total_ms}}</td><td>{{data.ecdh.total_ms}}</td></tr>
 <tr><td>Public Key Size</td><td>{{data.pqc.public_key}}</td><td>{{data.rsa.public_key}}</td><td>{{data.ecdh.public_key}}</td></tr>
 <tr><td>Ciphertext Size</td><td>{{data.pqc.ciphertext}}</td><td>{{data.rsa.ciphertext}}</td><td>{{data.ecdh.ciphertext}}</td></tr>
-<tr><td>Quantum Security Score</td><td>{{data.pqc.quantum_score}}</td><td>{{data.rsa.quantum_score}}</td><td>{{data.ecdh.quantum_score}}</td></tr>
-<tr><td>Throughput (ops/sec)</td><td>{{data.pqc.throughput_ops}}</td><td>{{data.rsa.throughput_ops}}</td><td>{{data.ecdh.throughput_ops}}</td></tr>
-
+<tr><td>Quantum Security</td><td>{{data.pqc.quantum_score}}</td><td>{{data.rsa.quantum_score}}</td><td>{{data.ecdh.quantum_score}}</td></tr>
+<tr><td>Throughput</td><td>{{data.pqc.throughput_ops}}</td><td>{{data.rsa.throughput_ops}}</td><td>{{data.ecdh.throughput_ops}}</td></tr>
 </table>
+</div>
 
-<br>
-<a href="/insights"><button>View Insights</button></a>
+<a href="/insights">
+<button class="primary-btn">View Insights</button>
+</a>
 
 </body>
 </html>

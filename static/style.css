@@ -6,34 +6,58 @@ padding:20px;
 text-align:center;
 }
 
+/* ---------- TABLE ---------- */
+
+.table-container{
+display:flex;
+justify-content:center;
+margin-top:30px;
+}
+
+table{
+border-collapse:collapse;
+width:70%;
+background:#0f172a;
+}
+
+td,th{
+border:1px solid #555;
+padding:12px;
+}
+
+.primary-btn{
+padding:12px 24px;
+font-size:16px;
+margin-top:20px;
+cursor:pointer;
+}
+
 /* ---------- CAROUSEL ---------- */
 
 .swiper{
-width:1000px;
-height:450px;
+width:1100px;
+height:500px;
 margin:40px auto;
 }
 
-.swiper-slide{
-display:flex;
-justify-content:center;
-align-items:center;
+.card{
 background:#0f172a;
-border-radius:12px;
+padding:25px;
+border-radius:14px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:15px;
 }
 
-/* small graph cards */
 canvas{
-width:350px !important;
-height:250px !important;
-cursor:pointer;
+width:320px !important;
+height:220px !important;
 background:white;
 border-radius:8px;
 }
 
-/* ===============================
-MODAL
-=============================== */
+/* ---------- MODAL ---------- */
 
 .modal{
 display:none;
@@ -43,49 +67,40 @@ left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.85);
-z-index:999;
 }
 
 .modal-content{
 background:#0f172a;
 margin:3% auto;
 padding:25px;
-width:95%;
+width:90%;
 max-width:1400px;
 border-radius:12px;
 }
 
-/* big graph + table layout */
 .modal-grid{
 display:grid;
 grid-template-columns:3fr 1fr;
 gap:30px;
-align-items:start;
 }
 
-/* BIG GRAPH */
 #modalChart{
 width:100% !important;
 height:600px !important;
 background:white;
-border-radius:8px;
 }
 
-/* TABLE */
 #dataTable{
 border-collapse:collapse;
 width:100%;
-background:#020617;
 }
 
-#dataTable th,#dataTable td{
+#dataTable td,#dataTable th{
 border:1px solid #555;
 padding:10px;
-text-align:center;
 }
 
 .close{
 cursor:pointer;
-float:right;
 font-size:26px;
 }

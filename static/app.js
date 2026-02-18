@@ -1,8 +1,8 @@
 const MAX_POINTS = 5
 
-/* =========================
+/* =====================================================
 WHITE BACKGROUND FOR CHARTS
-========================= */
+===================================================== */
 const whiteBackgroundPlugin = {
 id: "whiteBackground",
 beforeDraw(chart){
@@ -15,45 +15,70 @@ ctx.restore()
 }
 }
 
-/* =========================
+/* =====================================================
+SAFE ELEMENT GETTER (prevents null crash)
+===================================================== */
+function getEl(id){
+const el=document.getElementById(id)
+if(!el) console.warn("Element not found:",id)
+return el
+}
+
+/* =====================================================
 CREATE CHART HELPERS
-========================= */
+===================================================== */
 
 function createLineChart(id){
-return new Chart(document.getElementById(id),{
+const el=getEl(id)
+if(!el) return null
+
+return new Chart(el,{
 type:"line",
 data:{
 labels:[],
 datasets:[
-{label:"Kyber",data:[],borderWidth:2},
-{label:"RSA",data:[],borderWidth:2},
-{label:"ECDH",data:[],borderWidth:2}
+{label:"Kyber",data:[],borderWidth:2,tension:.3},
+{label:"RSA",data:[],borderWidth:2,tension:.3},
+{label:"ECDH",data:[],borderWidth:2,tension:.3}
 ]
 },
 options:{
 responsive:true,
 maintainAspectRatio:false,
-scales:{y:{beginAtZero:true}}
+animation:true,
+scales:{
+y:{beginAtZero:true}
+}
 },
 plugins:[whiteBackgroundPlugin]
 })
 }
 
 function createBarChart(id,label){
-return new Chart(document.getElementById(id),{
+const el=getEl(id)
+if(!el) return null
+
+return new Chart(el,{
 type:"bar",
 data:{
 labels:["Kyber","RSA","ECDH"],
-datasets:[{label:label,data:[0,0,0]}]
+datasets:[{
+label:label,
+data:[0,0,0],
+borderWidth:1
+}]
 },
-options:{responsive:true},
+options:{
+responsive:true,
+animation:true
+},
 plugins:[whiteBackgroundPlugin]
 })
 }
 
-/* =========================
+/* =====================================================
 CREATE ALL 8 CHARTS
-========================= */
+===================================================== */
 
 const keygen=createLineChart("keygen")
 const encrypt=createLineChart("encrypt")
@@ -65,11 +90,13 @@ const cipher=createBarChart("cipher","Ciphertext Size")
 const quantum=createBarChart("quantum","Quantum Score")
 const throughput=createBarChart("throughput","Throughput")
 
-/* =========================
+/* =====================================================
 SLIDING WINDOW (5 VALUES)
-========================= */
+===================================================== */
 
 function pushData(chart,time,p,r,e){
+if(!chart) return
+
 chart.data.labels.push(time)
 chart.data.datasets[0].data.push(p)
 chart.data.datasets[1].data.push(r)
@@ -83,11 +110,12 @@ chart.data.datasets.forEach(d=>d.data.shift())
 chart.update()
 }
 
-/* =========================
-REALTIME UPDATE
-========================= */
+/* =====================================================
+REALTIME UPDATE (every 3s)
+===================================================== */
 
 async function update(){
+try{
 const res=await fetch("/metrics/live")
 const d=await res.json()
 const t=new Date().toLocaleTimeString()
@@ -97,72 +125,82 @@ pushData(encrypt,t,d.pqc.encrypt_ms,d.rsa.encrypt_ms,d.ecdh.encrypt_ms)
 pushData(decrypt,t,d.pqc.decrypt_ms,d.rsa.decrypt_ms,d.ecdh.decrypt_ms)
 pushData(total,t,d.pqc.total_ms,d.rsa.total_ms,d.ecdh.total_ms)
 
+/* update bar charts without recreating */
+if(pubkey){
 pubkey.data.datasets[0].data=[d.pqc.public_key,d.rsa.public_key,d.ecdh.public_key]
-cipher.data.datasets[0].data=[d.pqc.ciphertext,d.rsa.ciphertext,d.ecdh.ciphertext]
-quantum.data.datasets[0].data=[d.pqc.quantum_score,d.rsa.quantum_score,d.ecdh.quantum_score]
-throughput.data.datasets[0].data=[d.pqc.throughput_ops,d.rsa.throughput_ops,d.ecdh.throughput_ops]
-
 pubkey.update()
+}
+
+if(cipher){
+cipher.data.datasets[0].data=[d.pqc.ciphertext,d.rsa.ciphertext,d.ecdh.ciphertext]
 cipher.update()
+}
+
+if(quantum){
+quantum.data.datasets[0].data=[d.pqc.quantum_score,d.rsa.quantum_score,d.ecdh.quantum_score]
 quantum.update()
+}
+
+if(throughput){
+throughput.data.datasets[0].data=[d.pqc.throughput_ops,d.rsa.throughput_ops,d.ecdh.throughput_ops]
 throughput.update()
+}
+
+}catch(err){
+console.error("Metrics fetch failed",err)
+}
 }
 
 update()
 setInterval(update,3000)
 
-/* =========================
+/* =====================================================
 SMOOTH 3D ROTATING CAROUSEL
-========================= */
+===================================================== */
 
+if(document.querySelector(".mySwiper")){
 new Swiper(".mySwiper",{
-
-// 3D rotation effect
 effect:"coverflow",
-
-// grab cursor
 grabCursor:true,
-
-// center focus graph
 centeredSlides:true,
-
-// show multiple graphs
 slidesPerView:3,
-
-// spacing
-spaceBetween:40,
-
-// 3D depth
+spaceBetween:50,
 coverflowEffect:{
 rotate:40,
 stretch:0,
-depth:300,
+depth:320,
 modifier:1,
 slideShadows:true
 },
-
-// smooth animation
 speed:1200,
-
-// auto transition
 autoplay:{
 delay:2500,
 disableOnInteraction:false
 },
-
-// infinite loop
 loop:true,
-
-// keyboard navigation
 keyboard:{enabled:true},
-
-// mouse scroll support
 mousewheel:true
 })
+}
 
-/* =========================
+/* =====================================================
+GRAPH TITLES (for modal label)
+===================================================== */
+
+const graphTitles={
+keygen:"Key Generation Time",
+encrypt:"Encryption Time",
+decrypt:"Decryption Time",
+total:"Total Operation Time",
+pubkey:"Public Key Size",
+cipher:"Ciphertext Size",
+quantum:"Quantum Security Score",
+throughput:"Throughput"
+}
+
+/* =====================================================
 CLICK → BIG GRAPH MODAL
-========================= */
+===================================================== */
 
 let modalChartInstance=null
 
@@ -171,17 +209,28 @@ c.addEventListener("click",()=>openModal(c.id))
 })
 
 function openModal(id){
-document.getElementById("modal").style.display="block"
+
+const modal=getEl("modal")
+const modalTitle=getEl("modalTitle")
+const ctx=getEl("modalChart")
+
+if(!modal||!ctx) return
+
+modal.style.display="block"
+if(modalTitle) modalTitle.innerText=graphTitles[id]||"Graph"
 
 const src=Chart.getChart(id)
-const ctx=document.getElementById("modalChart")
+if(!src) return
 
 if(modalChartInstance) modalChartInstance.destroy()
 
 modalChartInstance=new Chart(ctx,{
 type:src.config.type,
 data:JSON.parse(JSON.stringify(src.data)),
-options:{responsive:true,maintainAspectRatio:false},
+options:{
+responsive:true,
+maintainAspectRatio:false
+},
 plugins:[whiteBackgroundPlugin]
 })
 
@@ -189,19 +238,31 @@ buildTable(src.data)
 }
 
 function closeModal(){
-document.getElementById("modal").style.display="none"
+const modal=getEl("modal")
+if(modal) modal.style.display="none"
 if(modalChartInstance) modalChartInstance.destroy()
 }
 
-/* =========================
+/* =====================================================
 DATA TABLE FOR GRAPH
-========================= */
+===================================================== */
 
 function buildTable(data){
-let html="<tr><th>Time</th><th>Kyber</th><th>RSA</th><th>ECDH</th></tr>"
+const table=getEl("dataTable")
+if(!table) return
+
+let html=`
+<tr>
+<th>Time</th>
+<th>Kyber</th>
+<th>RSA</th>
+<th>ECDH</th>
+</tr>
+`
 
 for(let i=0;i<data.labels.length;i++){
-html+=`<tr>
+html+=`
+<tr>
 <td>${data.labels[i]||"-"}</td>
 <td>${data.datasets[0].data[i]||"-"}</td>
 <td>${data.datasets[1].data[i]||"-"}</td>
@@ -209,5 +270,5 @@ html+=`<tr>
 </tr>`
 }
 
-document.getElementById("dataTable").innerHTML=html
+table.innerHTML=html
 }
