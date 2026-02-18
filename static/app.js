@@ -24,7 +24,7 @@ return el
 }
 
 /* =====================================================
-CREATE CHART HELPERS
+CREATE CHART HELPERS (WITH BRIGHT DISTINCT COLORS)
 ===================================================== */
 
 function createLineChart(id){
@@ -36,9 +36,30 @@ type:"line",
 data:{
 labels:[],
 datasets:[
-{label:"Kyber",data:[],borderWidth:2,tension:.3},
-{label:"RSA",data:[],borderWidth:2,tension:.3},
-{label:"ECDH",data:[],borderWidth:2,tension:.3}
+{
+label:"Kyber",
+data:[],
+borderWidth:3,
+tension:.3,
+borderColor:"#2962FF",
+backgroundColor:"rgba(41,98,255,0.1)"
+},
+{
+label:"RSA",
+data:[],
+borderWidth:3,
+tension:.3,
+borderColor:"#FF1744",
+backgroundColor:"rgba(255,23,68,0.1)"
+},
+{
+label:"ECDH",
+data:[],
+borderWidth:3,
+tension:.3,
+borderColor:"#00C853",
+backgroundColor:"rgba(0,200,83,0.1)"
+}
 ]
 },
 options:{
@@ -62,7 +83,17 @@ labels:["Kyber","RSA","ECDH"],
 datasets:[{
 label:label,
 data:[0,0,0],
-borderWidth:1
+backgroundColor:[
+"#2962FF",
+"#FF1744",
+"#00C853"
+],
+borderColor:[
+"#0039CB",
+"#C4001D",
+"#009624"
+],
+borderWidth:2
 }]
 },
 options:{responsive:true,animation:true},
@@ -148,16 +179,13 @@ const pqcTotal=d.pqc.total_ms
 const rsaTotal=d.rsa.total_ms
 const ecdhTotal=d.ecdh.total_ms
 
-/* security winner */
 const securityWinner=d.pqc.quantum_score===1 ? "Kyber (PQC)" : "Classical"
 
-/* performance winner (lowest time wins) */
 let perfWinner="Kyber"
 let min=Math.min(pqcTotal,rsaTotal,ecdhTotal)
 if(min===rsaTotal) perfWinner="RSA"
 if(min===ecdhTotal) perfWinner="ECDH"
 
-/* overall score */
 let scores={
 Kyber:(d.pqc.quantum_score*2)+(1/pqcTotal),
 RSA:(d.rsa.quantum_score*2)+(1/rsaTotal),
@@ -166,7 +194,6 @@ ECDH:(d.ecdh.quantum_score*2)+(1/ecdhTotal)
 
 let overall=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b)
 
-/* update UI safely */
 const secEl=getEl("securityWinner")
 const perfEl=getEl("performanceWinner")
 const overEl=getEl("overallWinner")
