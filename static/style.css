@@ -2,44 +2,73 @@ body{
 background:#020617;
 color:white;
 font-family:Arial;
-padding:30px;
+padding:20px;
+text-align:center;
 }
 
-table{
-border-collapse:collapse;
-width:80%;
+/* ---------- CAROUSEL ---------- */
+
+.swiper{
+width:1000px;
+height:450px;
+margin:40px auto;
 }
 
-td,th{
-border:1px solid #555;
-padding:10px;
+.swiper-slide{
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0f172a;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
-button{
-padding:10px 20px;
-font-size:16px;
+/* small graph cards */
+canvas{
+width:350px !important;
+height:250px !important;
 cursor:pointer;
 }
 
-.swiper{
-width:600px;
-height:400px;
-}
-
-.swiper{width:700px;height:400px;margin:auto}
-canvas{cursor:pointer}
+/* ---------- MODAL ---------- */
 
 .modal{
 display:none;
 position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.8);
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
 }
 
 .modal-content{
-background:#111;
+background:#0f172a;
 margin:5% auto;
 padding:20px;
-width:80%;
+width:90%;
+border-radius:12px;
+}
+
+.modal-grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.close{
+cursor:pointer;
+float:right;
+font-size:22px;
+}
+
+/* table */
+table{
+border-collapse:collapse;
+width:100%;
+}
+
+td,th{
+border:1px solid #555;
+padding:8px;
 }
