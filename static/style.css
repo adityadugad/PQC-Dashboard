@@ -20,7 +20,6 @@ justify-content:center;
 align-items:center;
 background:#0f172a;
 border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
 /* small graph cards */
@@ -28,9 +27,13 @@ canvas{
 width:350px !important;
 height:250px !important;
 cursor:pointer;
+background:white;
+border-radius:8px;
 }
 
-/* ---------- MODAL ---------- */
+/* ===============================
+MODAL
+=============================== */
 
 .modal{
 display:none;
@@ -40,35 +43,49 @@ left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.85);
+z-index:999;
 }
 
 .modal-content{
 background:#0f172a;
-margin:5% auto;
-padding:20px;
-width:90%;
+margin:3% auto;
+padding:25px;
+width:95%;
+max-width:1400px;
 border-radius:12px;
 }
 
+/* big graph + table layout */
 .modal-grid{
 display:grid;
-grid-template-columns:2fr 1fr;
-gap:20px;
+grid-template-columns:3fr 1fr;
+gap:30px;
+align-items:start;
+}
+
+/* BIG GRAPH */
+#modalChart{
+width:100% !important;
+height:600px !important;
+background:white;
+border-radius:8px;
+}
+
+/* TABLE */
+#dataTable{
+border-collapse:collapse;
+width:100%;
+background:#020617;
+}
+
+#dataTable th,#dataTable td{
+border:1px solid #555;
+padding:10px;
+text-align:center;
 }
 
 .close{
 cursor:pointer;
 float:right;
-font-size:22px;
-}
-
-/* table */
-table{
-border-collapse:collapse;
-width:100%;
-}
-
-td,th{
-border:1px solid #555;
-padding:8px;
+font-size:26px;
 }

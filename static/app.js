@@ -1,6 +1,21 @@
 const MAX_POINTS = 5
 
 /* =========================
+WHITE BACKGROUND PLUGIN
+========================= */
+const whiteBackgroundPlugin = {
+id: 'whiteBackground',
+beforeDraw(chart) {
+const ctx = chart.canvas.getContext('2d')
+ctx.save()
+ctx.globalCompositeOperation = 'destination-over'
+ctx.fillStyle = 'white'
+ctx.fillRect(0,0,chart.width,chart.height)
+ctx.restore()
+}
+}
+
+/* =========================
 CREATE CHART HELPERS
 ========================= */
 
@@ -18,7 +33,8 @@ datasets:[
 options:{
 responsive:true,
 scales:{y:{type:"logarithmic"}}
-}
+},
+plugins:[whiteBackgroundPlugin]
 })
 }
 
@@ -29,7 +45,8 @@ data:{
 labels:["Kyber","RSA","ECDH"],
 datasets:[{label:label,data:[0,0,0]}]
 },
-options:{responsive:true}
+options:{responsive:true},
+plugins:[whiteBackgroundPlugin]
 })
 }
 
@@ -94,7 +111,7 @@ update()
 setInterval(update,3000)
 
 /* =========================
-ROTATING CAROUSEL
+CAROUSEL
 ========================= */
 
 new Swiper(".mySwiper",{
@@ -110,8 +127,10 @@ slideShadows:true
 })
 
 /* =========================
-CLICK → MAXIMIZE GRAPH
+CLICK → BIG GRAPH
 ========================= */
+
+let modalChartInstance=null
 
 document.querySelectorAll("canvas").forEach(c=>{
 c.addEventListener("click",()=>openModal(c.id))
@@ -121,10 +140,15 @@ function openModal(id){
 document.getElementById("modal").style.display="block"
 
 const src=Chart.getChart(id)
+const ctx=document.getElementById("modalChart")
 
-new Chart(document.getElementById("modalChart"),{
+if(modalChartInstance) modalChartInstance.destroy()
+
+modalChartInstance=new Chart(ctx,{
 type:src.config.type,
-data:JSON.parse(JSON.stringify(src.data))
+data:JSON.parse(JSON.stringify(src.data)),
+options:{responsive:true,maintainAspectRatio:false},
+plugins:[whiteBackgroundPlugin]
 })
 
 buildTable(src.data)
@@ -132,10 +156,11 @@ buildTable(src.data)
 
 function closeModal(){
 document.getElementById("modal").style.display="none"
+if(modalChartInstance) modalChartInstance.destroy()
 }
 
 /* =========================
-DATA TABLE FOR GRAPH
+TABLE DATA
 ========================= */
 
 function buildTable(data){
