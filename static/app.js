@@ -20,7 +20,6 @@ SAFE ELEMENT GETTER (prevents null crash)
 ===================================================== */
 function getEl(id){
 const el=document.getElementById(id)
-if(!el) console.warn("Element not found:",id)
 return el
 }
 
@@ -46,9 +45,7 @@ options:{
 responsive:true,
 maintainAspectRatio:false,
 animation:true,
-scales:{
-y:{beginAtZero:true}
-}
+scales:{y:{beginAtZero:true}}
 },
 plugins:[whiteBackgroundPlugin]
 })
@@ -68,10 +65,7 @@ data:[0,0,0],
 borderWidth:1
 }]
 },
-options:{
-responsive:true,
-animation:true
-},
+options:{responsive:true,animation:true},
 plugins:[whiteBackgroundPlugin]
 })
 }
@@ -125,7 +119,7 @@ pushData(encrypt,t,d.pqc.encrypt_ms,d.rsa.encrypt_ms,d.ecdh.encrypt_ms)
 pushData(decrypt,t,d.pqc.decrypt_ms,d.rsa.decrypt_ms,d.ecdh.decrypt_ms)
 pushData(total,t,d.pqc.total_ms,d.rsa.total_ms,d.ecdh.total_ms)
 
-/* update bar charts without recreating */
+/* update bar charts */
 if(pubkey){
 pubkey.data.datasets[0].data=[d.pqc.public_key,d.rsa.public_key,d.ecdh.public_key]
 pubkey.update()
@@ -145,6 +139,41 @@ if(throughput){
 throughput.data.datasets[0].data=[d.pqc.throughput_ops,d.rsa.throughput_ops,d.ecdh.throughput_ops]
 throughput.update()
 }
+
+/* =====================================================
+PQC SUPREMACY CALCULATION
+===================================================== */
+
+const pqcTotal=d.pqc.total_ms
+const rsaTotal=d.rsa.total_ms
+const ecdhTotal=d.ecdh.total_ms
+
+/* security winner */
+const securityWinner=d.pqc.quantum_score===1 ? "Kyber (PQC)" : "Classical"
+
+/* performance winner (lowest time wins) */
+let perfWinner="Kyber"
+let min=Math.min(pqcTotal,rsaTotal,ecdhTotal)
+if(min===rsaTotal) perfWinner="RSA"
+if(min===ecdhTotal) perfWinner="ECDH"
+
+/* overall score */
+let scores={
+Kyber:(d.pqc.quantum_score*2)+(1/pqcTotal),
+RSA:(d.rsa.quantum_score*2)+(1/rsaTotal),
+ECDH:(d.ecdh.quantum_score*2)+(1/ecdhTotal)
+}
+
+let overall=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b)
+
+/* update UI safely */
+const secEl=getEl("securityWinner")
+const perfEl=getEl("performanceWinner")
+const overEl=getEl("overallWinner")
+
+if(secEl) secEl.innerText=securityWinner
+if(perfEl) perfEl.innerText=perfWinner
+if(overEl) overEl.innerText=overall
 
 }catch(err){
 console.error("Metrics fetch failed",err)
@@ -173,10 +202,7 @@ modifier:1,
 slideShadows:true
 },
 speed:1200,
-autoplay:{
-delay:2500,
-disableOnInteraction:false
-},
+autoplay:{delay:2500,disableOnInteraction:false},
 loop:true,
 keyboard:{enabled:true},
 mousewheel:true
@@ -184,7 +210,7 @@ mousewheel:true
 }
 
 /* =====================================================
-GRAPH TITLES (for modal label)
+GRAPH TITLES (for modal)
 ===================================================== */
 
 const graphTitles={
@@ -227,10 +253,7 @@ if(modalChartInstance) modalChartInstance.destroy()
 modalChartInstance=new Chart(ctx,{
 type:src.config.type,
 data:JSON.parse(JSON.stringify(src.data)),
-options:{
-responsive:true,
-maintainAspectRatio:false
-},
+options:{responsive:true,maintainAspectRatio:false},
 plugins:[whiteBackgroundPlugin]
 })
 
