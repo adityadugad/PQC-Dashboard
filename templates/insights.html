@@ -3,8 +3,8 @@
 <head>
 <title>Insights</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <link rel="stylesheet" href="/static/style.css">
@@ -12,15 +12,30 @@
 
 <body>
 
-<h1>Insights</h1>
+<h1>Crypto Insights</h1>
 
+<!-- ROTATING GRAPH CAROUSEL -->
 <div class="swiper">
 <div class="swiper-wrapper">
 
 <div class="swiper-slide"><canvas id="keygen"></canvas></div>
 <div class="swiper-slide"><canvas id="encrypt"></canvas></div>
+<div class="swiper-slide"><canvas id="decrypt"></canvas></div>
 <div class="swiper-slide"><canvas id="total"></canvas></div>
+<div class="swiper-slide"><canvas id="pubkey"></canvas></div>
+<div class="swiper-slide"><canvas id="cipher"></canvas></div>
+<div class="swiper-slide"><canvas id="quantum"></canvas></div>
+<div class="swiper-slide"><canvas id="throughput"></canvas></div>
 
+</div>
+</div>
+
+<!-- MAXIMIZE MODAL -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<span onclick="closeModal()">✖</span>
+<canvas id="modalChart"></canvas>
+<table id="dataTable"></table>
 </div>
 </div>
 
