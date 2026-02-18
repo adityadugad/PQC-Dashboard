@@ -1,15 +1,15 @@
 const MAX_POINTS = 5
 
 /* =========================
-WHITE BACKGROUND PLUGIN
+WHITE BACKGROUND FOR CHARTS
 ========================= */
 const whiteBackgroundPlugin = {
-id: 'whiteBackground',
-beforeDraw(chart) {
-const ctx = chart.canvas.getContext('2d')
+id: "whiteBackground",
+beforeDraw(chart){
+const ctx = chart.canvas.getContext("2d")
 ctx.save()
-ctx.globalCompositeOperation = 'destination-over'
-ctx.fillStyle = 'white'
+ctx.globalCompositeOperation="destination-over"
+ctx.fillStyle="white"
 ctx.fillRect(0,0,chart.width,chart.height)
 ctx.restore()
 }
@@ -32,7 +32,8 @@ datasets:[
 },
 options:{
 responsive:true,
-scales:{y:{type:"logarithmic"}}
+maintainAspectRatio:false,
+scales:{y:{beginAtZero:true}}
 },
 plugins:[whiteBackgroundPlugin]
 })
@@ -65,7 +66,7 @@ const quantum=createBarChart("quantum","Quantum Score")
 const throughput=createBarChart("throughput","Throughput")
 
 /* =========================
-SLIDING WINDOW
+SLIDING WINDOW (5 VALUES)
 ========================= */
 
 function pushData(chart,time,p,r,e){
@@ -111,23 +112,56 @@ update()
 setInterval(update,3000)
 
 /* =========================
-CAROUSEL
+SMOOTH 3D ROTATING CAROUSEL
 ========================= */
 
 new Swiper(".mySwiper",{
+
+// 3D rotation effect
 effect:"coverflow",
+
+// grab cursor
 grabCursor:true,
+
+// center focus graph
 centeredSlides:true,
-slidesPerView:"auto",
+
+// show multiple graphs
+slidesPerView:3,
+
+// spacing
+spaceBetween:40,
+
+// 3D depth
 coverflowEffect:{
-rotate:50,
-depth:200,
+rotate:40,
+stretch:0,
+depth:300,
+modifier:1,
 slideShadows:true
-}
+},
+
+// smooth animation
+speed:1200,
+
+// auto transition
+autoplay:{
+delay:2500,
+disableOnInteraction:false
+},
+
+// infinite loop
+loop:true,
+
+// keyboard navigation
+keyboard:{enabled:true},
+
+// mouse scroll support
+mousewheel:true
 })
 
 /* =========================
-CLICK → BIG GRAPH
+CLICK → BIG GRAPH MODAL
 ========================= */
 
 let modalChartInstance=null
@@ -160,7 +194,7 @@ if(modalChartInstance) modalChartInstance.destroy()
 }
 
 /* =========================
-TABLE DATA
+DATA TABLE FOR GRAPH
 ========================= */
 
 function buildTable(data){
