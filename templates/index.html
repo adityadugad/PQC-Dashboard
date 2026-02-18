@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PQC Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>PQC Supremacy Dashboard</h1>
+
+<table>
+<tr>
+<th>Metric</th>
+<th>Kyber</th>
+<th>RSA</th>
+<th>ECDH</th>
+</tr>
+
+<tr><td>Key Generation (ms)</td><td>{{data.pqc.keygen_ms}}</td><td>{{data.rsa.keygen_ms}}</td><td>{{data.ecdh.keygen_ms}}</td></tr>
+<tr><td>Encryption (ms)</td><td>{{data.pqc.encrypt_ms}}</td><td>{{data.rsa.encrypt_ms}}</td><td>{{data.ecdh.encrypt_ms}}</td></tr>
+<tr><td>Decryption (ms)</td><td>{{data.pqc.decrypt_ms}}</td><td>{{data.rsa.decrypt_ms}}</td><td>{{data.ecdh.decrypt_ms}}</td></tr>
+<tr><td>Total Time</td><td>{{data.pqc.total_ms}}</td><td>{{data.rsa.total_ms}}</td><td>{{data.ecdh.total_ms}}</td></tr>
+<tr><td>Public Key Size</td><td>{{data.pqc.public_key}}</td><td>{{data.rsa.public_key}}</td><td>{{data.ecdh.public_key}}</td></tr>
+<tr><td>Ciphertext Size</td><td>{{data.pqc.ciphertext}}</td><td>{{data.rsa.ciphertext}}</td><td>{{data.ecdh.ciphertext}}</td></tr>
+<tr><td>Quantum Security</td><td>{{data.pqc.quantum_score}}</td><td>{{data.rsa.quantum_score}}</td><td>{{data.ecdh.quantum_score}}</td></tr>
+
+</table>
+
+<br>
+<a href="/insights"><button>View Insights</button></a>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+table{
+border-collapse:collapse;
+width:80%;
+}
+
+td,th{
+border:1px solid #555;
+padding:10px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+cursor:pointer;
+}
+
+.swiper{
+width:600px;
+height:400px;
+}
